@@ -35,17 +35,16 @@ public class FileIndex {
 	 * outdated
 	 */
 	public synchronized void purge() {
+		ArrayList<String> purgeList = new ArrayList<String>(); 
 		for(FileLocator fileLocator : fileTable.values() ) {
-			ArrayList<FileLocation> locationList = fileLocator.getLocationList();
-			ArrayList<FileLocation> removeList = new ArrayList<FileLocation>();
-			for (FileLocation location : locationList ) {
-				removeList.add(location);
-			}
-			for (FileLocation location : removeList ) {
-				fileLocator.removeLocation(location);
+			fileLocator.purge();
+			if(fileLocator.getLocationCount() == 0 ) {
+				purgeList.add(fileLocator.getFileName());
 			}
 		}
-		
+		for(String name : purgeList) {
+			fileTable.remove(name);
+		}
 	}
 	
 	/**

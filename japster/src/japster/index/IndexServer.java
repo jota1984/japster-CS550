@@ -13,17 +13,12 @@ import japster.common.Const;
 
 public class IndexServer implements Index {
 
-	private Hashtable<String,FileLocator> fileList;
+	private FileIndex fileIndex; 
 	
 	public IndexServer() {
-		this.fileList = new Hashtable<String,FileLocator>();
-		new FileWatcher(fileList);
+		this.fileIndex = new FileIndex(); 
 	}
 	
- 	public Hashtable<String,FileLocator> getFileList() {
-		return fileList;
-	}
-
  	public void exportIndex() throws RemoteException { 
  		Index stub = (Index) UnicastRemoteObject.exportObject(this, Const.INDEX_SERVICE_PORT);
 		Registry registry = LocateRegistry.createRegistry(Const.INDEX_REGISTRY_PORT);
@@ -44,38 +39,17 @@ public class IndexServer implements Index {
 		}
 	}
 	
-	public void printFileList() {
-		for (Map.Entry<String, FileLocator> entry : fileList.entrySet()) {
-		    String n = entry.getKey();
-		    FileLocator locator = entry.getValue();
-		    System.out.println(n + ":");
-		    ArrayList<FileLocation> locations = locator.getLocationList();
-		    for( FileLocation location : locations) { 
-		    	System.out.println("-> " + location.toString());
-		    }
-		    // ...
-		}		
-	}
-
 	@Override
 	public FileLocator search(String name) throws RemoteException {
 		// TODO Prints whole file index instead of doing the actual search 
 		System.out.println("Searching:" + name);
-		printFileList(); 
-		
+		fileIndex.printFileTable(); 
 		return null;
 	}
 
 	@Override
 	public void register(InetSocketAddress address, String name) throws RemoteException {
-		FileLocator locator = fileList.get(name);
-		//File not already in list
-		if(locator == null) {
-			locator = new FileLocator(name);
-			fileList.put(name, locator);
-		}
-		locator.addLocation(new FileLocation(address));
-		System.out.println("Added " + name + " to index");
+		FileLocation location = new FileLocation(address);
+		fileIndex.register(name, location);
 	}
-
 }

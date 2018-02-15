@@ -44,6 +44,15 @@ public class FileLocator implements Serializable{
 		return locationList.size();
 	}
 	
+	@Override
+	public String toString() {
+		String locationStr = "";
+		for (FileLocation loc : locationList) {
+			locationStr += loc.toString() + "|";
+		}
+		return fileName + "->" + locationStr ;
+	}
+
 	/**
 	 * Remove FileLocations older than INDEX_TIMEOUT milliseconds
 	 */

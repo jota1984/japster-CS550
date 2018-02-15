@@ -5,9 +5,9 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Map;
-import java.util.Set;
 
 import japster.common.Const;
 
@@ -49,7 +49,7 @@ public class IndexServer implements Index {
 		    String n = entry.getKey();
 		    FileLocator locator = entry.getValue();
 		    System.out.println(n + ":");
-		    Set<FileLocation> locations = locator.getLocationList();
+		    ArrayList<FileLocation> locations = locator.getLocationList();
 		    for( FileLocation location : locations) { 
 		    	System.out.println("-> " + location.toString());
 		    }

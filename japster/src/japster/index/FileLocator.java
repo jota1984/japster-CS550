@@ -1,23 +1,24 @@
 package japster.index;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
 public class FileLocator {
 	
 	private String fileName;
-	private Set<FileLocation> locationList;
+	private ArrayList<FileLocation> locationList;
 	
 	public FileLocator(String name) {
 		this.fileName = name;
-		this.locationList = new HashSet<FileLocation>();
+		this.locationList = new ArrayList<FileLocation>();
 	}
 	
 	public String getFileName() {
 		return fileName;
 	}
 
-	public Set<FileLocation> getLocationList() {
+	public ArrayList<FileLocation> getLocationList() {
 		return locationList;
 	}
 

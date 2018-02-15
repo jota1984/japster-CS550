@@ -1,8 +1,6 @@
 package japster.index;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 public class FileLocator {
 	
@@ -23,6 +21,11 @@ public class FileLocator {
 	}
 
 	public void addLocation(FileLocation location) {
-		locationList.add(location);
+		int idx = locationList.indexOf(location);
+		if (idx == -1) 
+			locationList.add(location);
+		else {
+			locationList.get(idx).getRefreshDate();
+		}
 	}
 }

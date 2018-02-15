@@ -1,9 +1,13 @@
 package japster.index;
 
+import java.io.Serializable;
 import java.net.InetSocketAddress;
 import java.util.Date;
 
-public class FileLocation {
+public class FileLocation implements Serializable{
+	
+	private static final long serialVersionUID = 1L;
+	
 	private InetSocketAddress locationAddress;
 	private Date refreshDate;
 	

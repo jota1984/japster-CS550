@@ -62,4 +62,8 @@ public class FileIndex {
 		locator.addLocation(location);
 		System.out.println("Added " + name + " to index");
 	}
+	
+	public synchronized FileLocator search(String name) {
+		return fileTable.get(name);
+	}
 }

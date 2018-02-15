@@ -41,10 +41,14 @@ public class IndexServer implements Index {
 	
 	@Override
 	public FileLocator search(String name) throws RemoteException {
-		// TODO Prints whole file index instead of doing the actual search 
-		System.out.println("Searching:" + name);
-		fileIndex.printFileTable(); 
-		return null;
+		System.out.println("Searching: " + name);
+		FileLocator result = fileIndex.search(name);
+		if (result == null) {
+			System.out.println("Not Found!");	
+		} else {
+			System.out.println(result);
+		}
+		return result;
 	}
 
 	@Override

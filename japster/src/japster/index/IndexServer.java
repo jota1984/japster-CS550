@@ -17,6 +17,7 @@ public class IndexServer implements Index {
 	
 	public IndexServer() {
 		this.fileList = new Hashtable<String,FileLocator>();
+		new FileWatcher(fileList);
 	}
 	
  	public Hashtable<String,FileLocator> getFileList() {
@@ -48,8 +49,8 @@ public class IndexServer implements Index {
 		    String n = entry.getKey();
 		    FileLocator locator = entry.getValue();
 		    System.out.println(n + ":");
-		    Set<InetSocketAddress> locations = locator.getLocationList();
-		    for( InetSocketAddress location : locations) { 
+		    Set<FileLocation> locations = locator.getLocationList();
+		    for( FileLocation location : locations) { 
 		    	System.out.println("-> " + location.toString());
 		    }
 		    // ...
@@ -68,14 +69,12 @@ public class IndexServer implements Index {
 	@Override
 	public void register(InetSocketAddress address, String name) throws RemoteException {
 		FileLocator locator = fileList.get(name);
-		//File already in list
-		if (locator != null) {
-			locator.addLocation(address);
-		} else { 
+		//File not already in list
+		if(locator == null) {
 			locator = new FileLocator(name);
-			locator.addLocation(address);
 			fileList.put(name, locator);
 		}
+		locator.addLocation(new FileLocation(address));
 		System.out.println("Added " + name + " to index");
 	}
 

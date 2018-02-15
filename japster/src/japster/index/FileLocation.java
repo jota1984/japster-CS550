@@ -9,8 +9,8 @@ public class FileLocation {
 	
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
-		return locationAddress.toString();
+		return "" + locationAddress.toString() + 
+				"(" + refreshDate + ")";
 	}
 
 	public FileLocation(InetSocketAddress address) {

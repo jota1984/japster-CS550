@@ -1,6 +1,9 @@
 package japster.index;
 
 import java.util.ArrayList;
+import java.util.Date;
+
+import japster.common.Const;
 
 public class FileLocator {
 	
@@ -20,7 +23,7 @@ public class FileLocator {
 		return locationList;
 	}
 
-	public void addLocation(FileLocation location) {
+	public synchronized void addLocation(FileLocation location) {
 		int idx = locationList.indexOf(location);
 		if (idx == -1) 
 			locationList.add(location);
@@ -29,11 +32,30 @@ public class FileLocator {
 		}
 	}
 	
-	public boolean removeLocation(FileLocation location) {
+	public synchronized boolean removeLocation(FileLocation location) {
 		return locationList.remove(location);
 	}
 	
-	public int getLocationCount() {
+	public synchronized int getLocationCount() {
 		return locationList.size();
+	}
+	
+	/**
+	 * Remove FileLocations older than INDEX_TIMEOUT milliseconds
+	 */
+	public synchronized void purge() { 
+		Date oldest = new Date(System.currentTimeMillis() - Const.INDEX_TIMEOUT);
+		ArrayList<FileLocation> purgeList = new ArrayList<FileLocation>();
+		for(FileLocation location : locationList ) {
+			Date date = location.getRefreshDate();
+			if (date.before(oldest)) {
+				purgeList.add(location);
+			}
+		}
+		for(FileLocation location : purgeList ) {
+			System.out.println("Location outdated! " + location.toString() );
+			removeLocation(location);
+		}
+		
 	}
 }

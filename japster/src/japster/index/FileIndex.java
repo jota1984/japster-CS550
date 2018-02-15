@@ -17,7 +17,7 @@ public class FileIndex {
 	 * Prints the whole index to stdout
 	 * 
 	 */
-	synchronized public void printFileTable() {
+	public synchronized void printFileTable() {
 		for (Map.Entry<String, FileLocator> entry : fileTable.entrySet()) {
 		    String n = entry.getKey();
 		    FileLocator locator = entry.getValue();
@@ -29,12 +29,31 @@ public class FileIndex {
 		}		
 	}
 	
+	
+	/**
+	 * Checks timestamps of each location and removes files that are 
+	 * outdated
+	 */
+	public synchronized void purge() {
+		for(FileLocator fileLocator : fileTable.values() ) {
+			ArrayList<FileLocation> locationList = fileLocator.getLocationList();
+			ArrayList<FileLocation> removeList = new ArrayList<FileLocation>();
+			for (FileLocation location : locationList ) {
+				removeList.add(location);
+			}
+			for (FileLocation location : removeList ) {
+				fileLocator.removeLocation(location);
+			}
+		}
+		
+	}
+	
 	/**
 	 * Registers a new location on the index 
 	 * @param name
 	 * @param location
 	 */
-	synchronized public void register(String name, FileLocation location) {
+	public synchronized void register(String name, FileLocation location) {
 		FileLocator locator = fileTable.get(name);
 		//File not already in list
 		if(locator == null) {

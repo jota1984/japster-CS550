@@ -28,4 +28,12 @@ public class FileLocator {
 			locationList.get(idx).refresh();
 		}
 	}
+	
+	public boolean removeLocation(FileLocation location) {
+		return locationList.remove(location);
+	}
+	
+	public int getLocationCount() {
+		return locationList.size();
+	}
 }

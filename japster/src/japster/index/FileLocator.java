@@ -25,7 +25,7 @@ public class FileLocator {
 		if (idx == -1) 
 			locationList.add(location);
 		else {
-			locationList.get(idx).getRefreshDate();
+			locationList.get(idx).refresh();
 		}
 	}
 }

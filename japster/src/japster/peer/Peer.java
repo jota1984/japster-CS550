@@ -8,6 +8,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.util.Scanner;
 
 import japster.common.Const;
 import japster.index.FileLocator;
@@ -77,29 +78,7 @@ public class Peer {
         			Integer.parseInt(args[2]),
         			args[3]);
         	
-        	peer.obtainIndexStub();
-        	peer.updateFileRigistry();
-            String indexAddress = args[0]; 
-            String localAddress = args[1];
-            int localPort = Integer.parseInt(args[2]);
-            
-            BufferedReader cin = new BufferedReader( new InputStreamReader(System.in));
-            String line;
-            while ( (line = cin.readLine()) != null) {
-            	switch(line) {
-            	case "search": 
-            		peer.search("test");
-            		break;
-            	case "register": 
-            		peer.updateFileRigistry();
-            		break;
-            	case "quit":
-                    System.out.println("quitting");
-            		return;
-            	}
-            	
-            }
-            
+            new PeerConsole(peer);
 
         } catch (Exception e) {
             System.err.println("Client exception:");

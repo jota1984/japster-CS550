@@ -7,6 +7,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.Scanner;
 
+import japster.index.FileLocation;
 import japster.index.FileLocator;
 
 public class PeerConsole extends Thread {
@@ -22,6 +23,8 @@ public class PeerConsole extends Thread {
 	public void run() {
         BufferedReader cin = new BufferedReader( new InputStreamReader(System.in));
         String line;
+        FileLocation location = null;
+        String fileName = null;
         try {
 			while ( (line = cin.readLine()) != null) {
 
@@ -42,16 +45,31 @@ public class PeerConsole extends Thread {
 					break;
 				case "search": 
 					s.useDelimiter("$");
-					String query = s.next();
+					String query = s.next().trim();
 					System.out.println("Searching for \"" + query + "\"");
 					FileLocator result = peer.search(query);
 					if (result == null)
 						System.out.println("Not found!");
-					else
+					else { 
+						location = result.getLocationList().get(0);
+						fileName = query;
 						System.out.println(result);
+					}
 					break;
 				case "register": 
 					peer.updateFileRigistry();
+					break;
+				case "download": 
+					if (location != null ) {
+						try {
+							peer.download(fileName,location);
+						} catch (NotBoundException|RemoteException e) {
+							System.out.println("Download failed");
+						} 
+					}
+					break;
+				case "export": 
+					peer.exoportFileServer();
 					break;
 				case "quit":
 			        System.out.println("quitting");

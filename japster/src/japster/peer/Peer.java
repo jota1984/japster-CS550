@@ -1,20 +1,20 @@
 package japster.peer;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.InputStreamReader;
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.util.Scanner;
+import java.rmi.server.UnicastRemoteObject;
 
 import japster.common.Const;
+import japster.index.FileLocation;
 import japster.index.FileLocator;
 import japster.index.Index;
 
-public class Peer {
+public class Peer implements FileServer {
 	
 	private String localAddress;
 	private int localPort; 
@@ -85,4 +85,42 @@ public class Peer {
             e.printStackTrace();
         }
 	}
+
+	@Override
+	public int obtain(String name) throws RemoteException  {
+		String fileName = fileDirectoryName + File.separator + name;
+		FileServerThread serverThread = null; 
+		int port = 0;
+		try {
+			serverThread = new FileServerThread(fileName);
+			port = serverThread.getPort();
+			serverThread.start();
+		} catch (IOException e) {
+			System.out.println("Could not create server thread");
+		}
+		return port;
+	}
+	
+	public void exoportFileServer() throws RemoteException {
+ 		FileServer stub = (FileServer) UnicastRemoteObject.exportObject(this, Const.PEER_SERVICE_PORT);
+		Registry registry = LocateRegistry.createRegistry(localPort);
+        registry.rebind(Const.PEER_SERVICE_NAME, stub);
+	}
+	
+	public void download(String fileName, FileLocation location) throws RemoteException, NotBoundException {
+		String address = location.getLocationAddress().getHostString();
+		int port = location.getLocationAddress().getPort();
+		
+		Registry registry = LocateRegistry.getRegistry(address, port);
+		FileServer server = (FileServer) registry.lookup(Const.PEER_SERVICE_NAME);
+		
+		int downloadPort = server.obtain(fileName);
+		
+		fileName = fileDirectoryName + File.separator + fileName;
+		FileDownloaderThread fileDownloader = 
+				new FileDownloaderThread(fileName, address, downloadPort);
+		fileDownloader.start();
+				
+	}
+	
 }

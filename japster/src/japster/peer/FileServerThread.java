@@ -2,6 +2,7 @@ package japster.peer;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.ServerSocket;
@@ -27,20 +28,26 @@ public class FileServerThread extends Thread {
 	public FileServerThread( String fileName) throws IOException {
 		
 		this.fileName = fileName;
-
+		
 		serverSocket = new ServerSocket(0);
 		serverSocket.setSoTimeout(Const.FILE_SERVER_WAIT_TIME);
 
 		input = null; 
-		
 		clientSocket = null;
 		output = null;
 	}
 	
+	/**
+	 * Get the port where the ServerSocket was bound.
+	 * @return int representing the port number
+	 */
 	public int getPort() {
 		return serverSocket.getLocalPort();
 	}
 	
+	/**
+	 * Close all resources used by the thread.
+	 */
 	public void cleanup() {
 		if( serverSocket != null ) {
 			try {
@@ -81,7 +88,6 @@ public class FileServerThread extends Thread {
 			output = clientSocket.getOutputStream();
 			input = new FileInputStream(new File (fileName));
 
-			
 			byte buffer[] = new byte[Const.BUFFER_SIZE];
 
 			int len = input.read(buffer);

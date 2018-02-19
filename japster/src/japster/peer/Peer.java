@@ -126,16 +126,10 @@ public class Peer implements FileServer {
 	 * object.
 	 * @param name String representing the name of the file to be searched
 	 * @return
+	 * @throws RemoteException 
 	 */
-	public FileLocator search(String name) {
-		
-		try {
-			return indexStub.search(name);
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		}
+	public FileLocator search(String name) throws RemoteException {
+		return indexStub.search(name);
 	}
 	
 	/**

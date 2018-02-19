@@ -47,14 +47,18 @@ public class PeerConsole extends Thread {
 					s.useDelimiter("$");
 					String query = s.next().trim();
 					System.out.println("Searching for \"" + query + "\"");
-					FileLocator result = peer.search(query);
-					if (result == null)
-						System.out.println("Not found!");
-					else { 
-						location = result.getLocationList().get(0);
-						fileName = query;
-						System.out.println(result);
-					}
+					try {
+						FileLocator result = peer.search(query);
+						if (result == null)
+							System.out.println("Not found!");
+						else { 
+							location = result.getLocationList().get(0);
+							fileName = query;
+							System.out.println(result);
+						}
+					} catch( RemoteException e) {
+						System.out.println("Exception communicating with IndexServer");
+					} 
 					break;
 				case "register": 
 					peer.updateFileRigistry();

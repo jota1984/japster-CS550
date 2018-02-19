@@ -10,6 +10,24 @@ import java.util.Scanner;
 import japster.index.FileLocation;
 import japster.index.FileLocator;
 
+/**
+ * Implements command line interface for Peer class. 
+ * <br>
+ * Supports the following commands
+ * <br>
+ *	- connect: gets stub from IndexServer
+ * <br>
+ *	- search FILENAME: Searches IndexServer for a file
+ * <br>	
+ *	- register: Registers all local files with IndexServer
+ *	<br>
+ *	- export: Exports FileServer stub so other peers can download files from this Peer
+ *	<br>
+ *	- quit
+ * 
+ * @author jota
+ *
+ */
 public class PeerConsole extends Thread {
 	
 	private Peer peer; 
@@ -23,7 +41,10 @@ public class PeerConsole extends Thread {
 	public void run() {
         BufferedReader cin = new BufferedReader( new InputStreamReader(System.in));
         String line;
+        
+        //Used to store a FileLocation object obtained after a search command
         FileLocation location = null;
+        //Used to store fileName of file searched using the search command
         String fileName = null;
         try {
 			while ( (line = cin.readLine()) != null) {
@@ -52,6 +73,7 @@ public class PeerConsole extends Thread {
 						if (result == null)
 							System.out.println("Not found!");
 						else { 
+							//store query result to be used by download command
 							location = result.getLocationList().get(0);
 							fileName = query;
 							System.out.println(result);
@@ -66,6 +88,8 @@ public class PeerConsole extends Thread {
 				case "download": 
 					if (location != null ) {
 						try {
+							System.out.println("Attempting to download " + fileName +
+									" from " + location);
 							peer.download(fileName,location);
 						} catch (NotBoundException|RemoteException e) {
 							System.out.println("Download failed");
@@ -76,6 +100,7 @@ public class PeerConsole extends Thread {
 					break;
 				case "export": 
 					peer.exportFileServer();
+					System.out.println("FileServer object exported");
 					break;
 				case "quit":
 			        System.out.println("quitting");

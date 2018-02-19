@@ -69,7 +69,9 @@ public class PeerConsole extends Thread {
 							peer.download(fileName,location);
 						} catch (NotBoundException|RemoteException e) {
 							System.out.println("Download failed");
-						} 
+						} catch (IOException e) {
+							System.out.println("Download failed. File exists");
+						}
 					}
 					break;
 				case "export": 

@@ -146,12 +146,18 @@ public class Peer implements FileServer {
 	 * Download a file from another peer represented by a FileLocation
 	 * @param fileName String representing the name of the file
 	 * @param location FileLocation pointing to the registry of a Peer that has the file available
-	 * @throws RemoteException
 	 * @throws NotBoundException
+	 * @throws IOException 
 	 */
-	public void download(String fileName, FileLocation location) throws RemoteException, NotBoundException {
+	public void download(String fileName, FileLocation location) throws NotBoundException, IOException {
 		String address = location.getLocationAddress().getHostString();
 		int port = location.getLocationAddress().getPort();
+		
+		//check if file already exists
+		fileName = fileDirectoryName + File.separator + fileName;
+		if( new File(fileName).exists() )
+			throw new IOException("File exists");
+		
 		
 		//Query the Peer's registry to obtain its FileServer remote object
 		Registry registry = LocateRegistry.getRegistry(address, port);
@@ -162,7 +168,6 @@ public class Peer implements FileServer {
 		int downloadPort = server.obtain(fileName);
 		
 		//Start a downloader thread to download the file 
-		fileName = fileDirectoryName + File.separator + fileName;
 		FileDownloaderThread fileDownloader = 
 				new FileDownloaderThread(fileName, address, downloadPort);
 		fileDownloader.start();

@@ -3,6 +3,12 @@ package japster.peer;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
+/**
+ * Interface exposed by Peer remote object. Peers use this interface to
+ * to obtain files from other peers  
+ * @author jota
+ *
+ */
 public interface FileServer extends Remote {
 	/**
 	 * Starts a thread serving a file 

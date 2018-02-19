@@ -73,7 +73,7 @@ public class PeerConsole extends Thread {
 					}
 					break;
 				case "export": 
-					peer.exoportFileServer();
+					peer.exportFileServer();
 					break;
 				case "quit":
 			        System.out.println("quitting");

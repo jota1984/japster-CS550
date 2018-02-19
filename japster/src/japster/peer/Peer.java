@@ -136,7 +136,7 @@ public class Peer implements FileServer {
 	 * Creates an RMI registry and binds the FileServer remote object to it.  
 	 * @throws RemoteException
 	 */
-	public void exoportFileServer() throws RemoteException {
+	public void exportFileServer() throws RemoteException {
  		FileServer stub = (FileServer) UnicastRemoteObject.exportObject(this, Const.PEER_SERVICE_PORT);
 		Registry registry = LocateRegistry.createRegistry(localPort);
         registry.rebind(Const.PEER_SERVICE_NAME, stub);

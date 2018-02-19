@@ -170,7 +170,7 @@ public class Peer implements FileServer {
 		
 		//Start a downloader thread to download the file 
 		FileDownloaderThread fileDownloader = 
-				new FileDownloaderThread(fileName, address, downloadPort);
+				new FileDownloaderThread(newfileName, address, downloadPort);
 		fileDownloader.start();
 				
 	}

@@ -80,7 +80,8 @@ public class FileLocator implements Serializable{
 			}
 		}
 		for(FileLocation location : purgeList ) {
-			System.out.println("Location outdated! " + location.toString() );
+			System.out.println("Removing location from FileLocator (" +
+					location.toString() + ")");
 			removeLocation(location);
 		}
 	}

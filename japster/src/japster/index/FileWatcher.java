@@ -1,7 +1,5 @@
 package japster.index;
 
-import java.util.Date;
-
 /**
  * A FileWatcher thread is attached to a FileIndex and periodically calls the purge 
  * method on it to make sure that files that have not been refreshed for a while are removed 
@@ -20,7 +18,6 @@ public class FileWatcher extends Thread{
 	@Override
 	public void run() {
 		while(true) {
-			System.out.println(new Date() + "| Updating FileLocators");
 			fileIndex.purge();
 			
 			try {

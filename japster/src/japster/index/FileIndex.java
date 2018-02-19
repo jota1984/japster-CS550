@@ -55,6 +55,7 @@ public class FileIndex {
 			}
 		}
 		for(String name : purgeList) {
+			System.out.println(name + " is no longer on the network. Removed from Index");
 			fileTable.remove(name);
 		}
 	}

@@ -5,7 +5,14 @@ import java.util.Hashtable;
 import java.util.Map;
 
 /**
- * Keeps track of registered files on a Hashtable
+ * Keeps track of registered files on a Hashtable. 
+ * 
+ * The table is indexed by a String that represents the name of a file.
+ * 
+ * The values of the table are a FileLocator object which includes a list of 
+ * FileLocation objects with information about the peers that currently have the file
+ * available. 
+ * 
  * @author jota
  *
  */

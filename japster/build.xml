@@ -10,15 +10,19 @@
     <property name="source" value="9"/>
     <path id="japster.classpath">
         <pathelement location="bin"/>
+        <pathelement location="lib/commons-cli-1.4.jar"/>
     </path>
     <path id="run.Peer.classpath">
         <path refid="japster.classpath"/>
+        <pathelement location="lib/commons-cli-1.4.jar"/>
     </path>
     <path id="run.IndexServer.classpath">
         <path refid="japster.classpath"/>
+        <pathelement location="lib/commons-cli-1.4.jar"/>
     </path>
-    <path id="run.Peer (1).classpath">
+    <path id="run.Peer_2.classpath">
         <path refid="japster.classpath"/>
+        <pathelement location="lib/commons-cli-1.4.jar"/>
     </path>
     <target name="init">
         <mkdir dir="bin"/>
@@ -44,7 +48,7 @@
     <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects"/>
     <target name="Peer">
         <java classname="japster.peer.Peer" failonerror="true" fork="yes">
-            <arg line="127.0.0.1 192.168.1.11 9999 /home/jota"/>
+            <arg line="-I127.0.0.1 -L192.168.1.11 -P9999 -D/home/jota"/>
             <classpath refid="run.Peer.classpath"/>
         </java>
     </target>
@@ -54,10 +58,10 @@
             <classpath refid="run.IndexServer.classpath"/>
         </java>
     </target>
-    <target name="Peer (1)">
+    <target name="Peer_2">
         <java classname="japster.peer.Peer" failonerror="true" fork="yes">
-            <arg line="127.0.0.1 192.168.1.11 9998 /home/jota/test"/>
-            <classpath refid="run.Peer (1).classpath"/>
+            <arg line="-I127.0.0.1 -L192.168.1.11 -P9998 -D/home/jota/test"/>
+            <classpath refid="run.Peer_2.classpath"/>
         </java>
     </target>
 </project>

@@ -10,6 +10,11 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
+
 import japster.common.Const;
 import japster.common.FileLocation;
 import japster.common.FileLocator;
@@ -46,6 +51,8 @@ public class Peer implements FileServer {
 	private String fileDirectoryName;
 	private String indexAddress; 
 	
+	private static Options options;
+	
 	private Index indexStub;
 	
 	
@@ -71,12 +78,15 @@ public class Peer implements FileServer {
 	
 	public static void main(String[] args) {
         try {
+        	//create and parse options
+        	createOptions();
+        	CommandLine cmd = (new DefaultParser()).parse( options, args);
         	
         	//Create a new Peer object using command line arguments
-        	Peer peer = new Peer(args[0],
-        			args[1],
-        			Integer.parseInt(args[2]),
-        			args[3]);
+        	Peer peer = new Peer(cmd.getOptionValue("I"),
+        			cmd.getOptionValue("L"),
+        			Integer.parseInt(cmd.getOptionValue("P")),
+        			cmd.getOptionValue("D"));
         	//Create a new PeerConsole attached to the Peer object
             new PeerConsole(peer);
 
@@ -84,6 +94,47 @@ public class Peer implements FileServer {
             System.err.println("Client exception:");
             e.printStackTrace();
         }
+	}
+	
+	/**
+	 * Create command line options
+	 */
+	private static void createOptions() {
+		options = new Options();
+		
+		Option indexAddress   = Option.builder("I")
+				.argName( "ip_address" )
+                .hasArg()
+                .desc(  "use provided ip address as IndexServer" )
+                .required()
+                .longOpt("index-address")
+                .build();
+		Option localAddress   = Option.builder("L")
+				.argName( "ip_address" )
+                .hasArg()
+                .desc(  "use provided ip address as Local address to listen for other peer connections" )
+                .required()
+                .longOpt("local-address")
+                .build();		
+		Option localPort   = Option.builder("P")
+				.argName( "port" )
+                .hasArg()
+                .desc(  "use provided port to listen for other peer connections" )
+                .required()
+                .longOpt("local-port")
+                .build();		
+		Option directory   = Option.builder("D")
+				.argName( "dir-name" )
+                .hasArg()
+                .desc(  "use provided directory to read shared files and store downloaded files" )
+                .required()
+                .longOpt("dir")
+                .build();	
+		
+		options.addOption(indexAddress);
+		options.addOption(localAddress);
+		options.addOption(localPort);
+		options.addOption(directory);
 	}
 	
 	/**

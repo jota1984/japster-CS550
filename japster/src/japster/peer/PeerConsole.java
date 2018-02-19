@@ -70,9 +70,11 @@ public class PeerConsole extends Thread {
 					System.out.println("Searching for \"" + query + "\"");
 					try {
 						FileLocator result = peer.search(query);
-						if (result == null)
+						if (result == null) {
+							fileName = null;
+							location = null;
 							System.out.println("Not found!");
-						else { 
+						} else { 
 							//store query result to be used by download command
 							location = result.getLocationList().get(0);
 							fileName = query;
@@ -86,7 +88,7 @@ public class PeerConsole extends Thread {
 					peer.updateFileRigistry();
 					break;
 				case "download": 
-					if (location != null ) {
+					if (location != null && fileName != null ) {
 						try {
 							System.out.println("Attempting to download " + fileName +
 									" from " + location);
@@ -96,6 +98,8 @@ public class PeerConsole extends Thread {
 						} catch (IOException e) {
 							System.out.println("Download failed. File exists");
 						}
+					} else {
+						System.out.println("Must search a file first");
 					}
 					break;
 				case "export": 

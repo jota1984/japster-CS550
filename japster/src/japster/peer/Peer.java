@@ -186,7 +186,7 @@ public class Peer implements FileServer {
 			port = serverThread.getPort();
 			serverThread.start();
 		} catch (FileNotFoundException e) {
-			System.out.println("File Not found");
+			System.out.println("File Not found: " + fileName);
 		} catch (IOException e) {
 			System.out.println("Could not create server thread");
 		}

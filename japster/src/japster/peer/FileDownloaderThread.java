@@ -8,6 +8,12 @@ import java.net.Socket;
 
 import japster.common.Const;
 
+/**
+ * Creates a thread that will attempt to connect to a another Peer and download
+ * a file from it. 
+ * @author jota
+ *
+ */
 public class FileDownloaderThread extends Thread {
 	
 	private String fileName;
@@ -18,12 +24,21 @@ public class FileDownloaderThread extends Thread {
 	private Socket socket = null;
 	private InputStream input = null;
 	
+	/**
+	 * Creates a new FileDownloaderThread object
+	 * @param fileName String representing the full name that will be used to create the file on this peer 
+	 * @param address String representation of the peer that will provide the file
+	 * @param port int representing the port where the remote peer is serving the file
+	 */
 	public FileDownloaderThread(String fileName, String address, int port) { 
 		this.fileName = fileName;
 		this.address = address; 
 		this.port = port; 
 	}
 	
+	/**
+	 * Close all resources used by the thread.
+	 */
 	public void cleanup() {
 		if( socket != null ) {
 			try {
@@ -65,8 +80,9 @@ public class FileDownloaderThread extends Thread {
 			}
 		
 			output.flush();
+			System.out.println("Download success (" + fileName + ")");
 		} catch (IOException e) {
-			System.out.println("Download failed");
+			System.out.println("Download failed (" + fileName + ")");
 			e.printStackTrace();
 		} finally {
 			cleanup();

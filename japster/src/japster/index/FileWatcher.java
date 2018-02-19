@@ -7,8 +7,7 @@ public class FileWatcher extends Thread{
 	private FileIndex fileIndex;
 	
 	public FileWatcher(FileIndex fileIndex) {
-		this.fileIndex = fileIndex; 
-		start(); 
+		this.fileIndex = fileIndex;  
 	}
 
 	@Override
@@ -20,7 +19,6 @@ public class FileWatcher extends Thread{
 			try {
 				sleep(WATCH_PERIOD);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				throw new RuntimeException(e);
 			}
 		}

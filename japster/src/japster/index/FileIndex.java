@@ -10,7 +10,6 @@ public class FileIndex {
 	
 	public FileIndex() {
 		this.fileTable = new Hashtable<String,FileLocator>();
-		new FileWatcher(this);
 	}
 	
 	/**

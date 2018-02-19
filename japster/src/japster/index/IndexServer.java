@@ -35,13 +35,26 @@ public class IndexServer implements Index {
 			
 			//Initialize RMI
 			server.exportIndex();
-			
 	        System.out.println("Index server started");
+	        
+	        //Create FileWatcher thread to monitor the FileIndex
+			System.out.println("Creating FileWatcher thread");
+			server.createFileWatcher();
 
 		} catch (Exception e) { 
             System.err.println("Cant start index server:");
             e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * Creates and starts a new FileWatcher thread attached to the FileIndex
+	 * @return The FileWatcher Thread
+	 */
+	public FileWatcher createFileWatcher() {
+		FileWatcher fw = new FileWatcher(fileIndex);
+		fw.start();
+		return fw;
 	}
 	
 	@Override

@@ -12,6 +12,7 @@ import java.rmi.server.UnicastRemoteObject;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 
@@ -80,7 +81,15 @@ public class Peer implements FileServer {
         try {
         	//create and parse options
         	createOptions();
+        	
         	CommandLine cmd = (new DefaultParser()).parse( options, args);
+        	
+        	if (!cmd.hasOption("L") || !cmd.hasOption("D") || !cmd.hasOption("I") || 
+        			!cmd.hasOption("P") || cmd.hasOption("h")) {
+            	HelpFormatter formatter = new HelpFormatter();
+            	formatter.printHelp( "Peer", options );
+            	System.exit(0);
+        	}
         	
         	//Create a new Peer object using command line arguments
         	Peer peer = new Peer(cmd.getOptionValue("I"),
@@ -106,35 +115,36 @@ public class Peer implements FileServer {
 				.argName( "ip_address" )
                 .hasArg()
                 .desc(  "use provided ip address as IndexServer" )
-                .required()
                 .longOpt("index-address")
                 .build();
 		Option localAddress   = Option.builder("L")
 				.argName( "ip_address" )
                 .hasArg()
                 .desc(  "use provided ip address as Local address to listen for other peer connections" )
-                .required()
                 .longOpt("local-address")
                 .build();		
 		Option localPort   = Option.builder("P")
 				.argName( "port" )
                 .hasArg()
                 .desc(  "use provided port to listen for other peer connections" )
-                .required()
                 .longOpt("local-port")
                 .build();		
 		Option directory   = Option.builder("D")
 				.argName( "dir-name" )
                 .hasArg()
                 .desc(  "use provided directory to read shared files and store downloaded files" )
-                .required()
                 .longOpt("dir")
+                .build();	
+		Option help   = Option.builder("h")
+                .desc(  "print this help" )
+                .longOpt("help")
                 .build();	
 		
 		options.addOption(indexAddress);
 		options.addOption(localAddress);
 		options.addOption(localPort);
 		options.addOption(directory);
+		options.addOption(help);
 	}
 	
 	/**

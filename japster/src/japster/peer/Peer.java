@@ -217,7 +217,7 @@ public class Peer implements FileServer {
 	 * @throws RemoteException
 	 */
 	public void exportFileServer() throws RemoteException {
- 		FileServer stub = (FileServer) UnicastRemoteObject.exportObject(this, Const.PEER_SERVICE_PORT);
+ 		FileServer stub = (FileServer) UnicastRemoteObject.exportObject(this,0);
 		Registry registry = LocateRegistry.createRegistry(localPort);
         registry.rebind(Const.PEER_SERVICE_NAME, stub);
 	}

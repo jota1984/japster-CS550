@@ -6,6 +6,14 @@ import java.util.Date;
 
 import japster.common.Const;
 
+/**
+ * A FileLocator keeps track of the number of different peers that have registered a file.
+ * 
+ * The name of the file is kept as a String and the peer information is kept on 
+ * an ArrayList of FileLocations. 
+ * @author jota
+ *
+ */
 public class FileLocator implements Serializable{
 	
 
@@ -27,6 +35,12 @@ public class FileLocator implements Serializable{
 		return locationList;
 	}
 
+	/**
+	 * Adds a new FileLocation to this FileLocator. If the FileLocation is already
+	 * present in this FileLocator then it only calls refresh on the FileLocation to
+	 * update its timestamp
+	 * @param location
+	 */
 	public synchronized void addLocation(FileLocation location) {
 		int idx = locationList.indexOf(location);
 		if (idx == -1) 
@@ -36,23 +50,23 @@ public class FileLocator implements Serializable{
 		}
 	}
 	
+	/**
+	 * Removes a FileLocation from the FileLocator
+	 * @param location
+	 * @return
+	 */
 	public synchronized boolean removeLocation(FileLocation location) {
 		return locationList.remove(location);
 	}
 	
+	/**
+	 * Get the number of FileLocations currently stored on this FileLocator
+	 * @return
+	 */
 	public synchronized int getLocationCount() {
 		return locationList.size();
 	}
 	
-	@Override
-	public String toString() {
-		String locationStr = "";
-		for (FileLocation loc : locationList) {
-			locationStr += loc.toString() + "|";
-		}
-		return fileName + "->" + locationStr ;
-	}
-
 	/**
 	 * Remove FileLocations older than INDEX_TIMEOUT milliseconds
 	 */
@@ -69,6 +83,14 @@ public class FileLocator implements Serializable{
 			System.out.println("Location outdated! " + location.toString() );
 			removeLocation(location);
 		}
-		
+	}
+
+	@Override
+	public String toString() {
+		String locationStr = "";
+		for (FileLocation loc : locationList) {
+			locationStr += loc.toString() + "|";
+		}
+		return fileName + "->" + locationStr ;
 	}
 }

@@ -155,8 +155,8 @@ public class Peer implements FileServer {
 		int port = location.getLocationAddress().getPort();
 		
 		//check if file already exists
-		fileName = fileDirectoryName + File.separator + fileName;
-		if( new File(fileName).exists() )
+		String newfileName = fileDirectoryName + File.separator + fileName;
+		if( new File(newfileName).exists() )
 			throw new IOException("File exists");
 		
 		

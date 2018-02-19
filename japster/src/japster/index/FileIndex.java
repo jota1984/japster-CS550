@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Map;
 
+/**
+ * Keeps track of registered files on a Hashtable
+ * @author jota
+ *
+ */
 public class FileIndex {
 	
 	private Hashtable<String,FileLocator> fileTable;
@@ -30,8 +35,9 @@ public class FileIndex {
 	
 	
 	/**
-	 * Checks timestamps of each location and removes files that are 
-	 * outdated
+	 * Calls purge() on each FileLocator of the Index. After each FileLocator has 
+	 * been purged it checks the FileLocator's number of references. If the FileLocator
+	 * has 0 FileLocations then the entry is removed from the Index
 	 */
 	public synchronized void purge() {
 		ArrayList<String> purgeList = new ArrayList<String>(); 

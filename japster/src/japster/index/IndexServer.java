@@ -57,6 +57,17 @@ public class IndexServer implements Index {
 		return fw;
 	}
 	
+ 	/**
+ 	 * Exports the remote object, creates a registry and binds the remote object 
+ 	 * to the registry
+ 	 * @throws RemoteException
+ 	 */
+ 	private void exportIndex() throws RemoteException { 
+ 		Index stub = (Index) UnicastRemoteObject.exportObject(this, Const.INDEX_SERVICE_PORT);
+		Registry registry = LocateRegistry.createRegistry(Const.INDEX_REGISTRY_PORT);
+        registry.rebind(Const.INDEX_SERVICE_NAME, stub);
+  	}
+	
 	@Override
 	public FileLocator search(String name) throws RemoteException {
 		System.out.println("Searching: " + name);
@@ -75,14 +86,5 @@ public class IndexServer implements Index {
 		fileIndex.register(name, location);
 	}
 
- 	/**
- 	 * Exports the remote object, creates a registry and binds the remote object 
- 	 * to the registry
- 	 * @throws RemoteException
- 	 */
- 	private void exportIndex() throws RemoteException { 
- 		Index stub = (Index) UnicastRemoteObject.exportObject(this, Const.INDEX_SERVICE_PORT);
-		Registry registry = LocateRegistry.createRegistry(Const.INDEX_REGISTRY_PORT);
-        registry.rebind(Const.INDEX_SERVICE_NAME, stub);
-  	}
+
 }

@@ -11,9 +11,9 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
 import japster.common.Const;
-import japster.index.FileLocation;
-import japster.index.FileLocator;
-import japster.index.Index;
+import japster.common.FileLocation;
+import japster.common.FileLocator;
+import japster.common.Index;
 
 /**
  * Implements the peer program for the P2P application.

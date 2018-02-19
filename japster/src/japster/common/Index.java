@@ -1,4 +1,4 @@
-package japster.index;
+package japster.common;
 
 import java.net.InetSocketAddress;
 import java.rmi.Remote;

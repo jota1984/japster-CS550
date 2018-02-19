@@ -7,8 +7,8 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.Scanner;
 
-import japster.index.FileLocation;
-import japster.index.FileLocator;
+import japster.common.FileLocation;
+import japster.common.FileLocator;
 
 /**
  * Implements command line interface for Peer class. 

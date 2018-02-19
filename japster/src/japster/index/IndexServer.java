@@ -7,6 +7,9 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
 import japster.common.Const;
+import japster.common.FileLocation;
+import japster.common.FileLocator;
+import japster.common.Index;
 
 /**
  * Implements the IndexServer for the P2P application.

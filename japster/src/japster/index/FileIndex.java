@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Map;
 
+import japster.common.FileLocation;
+import japster.common.FileLocator;
+
 /**
  * Keeps track of registered files on a Hashtable. 
  * 

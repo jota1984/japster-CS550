@@ -1,10 +1,8 @@
-package japster.index;
+package japster.common;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
-
-import japster.common.Const;
 
 /**
  * A FileLocator keeps track of the number of different peers that have registered a file.

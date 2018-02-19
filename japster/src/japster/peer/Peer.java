@@ -96,6 +96,17 @@ public class Peer implements FileServer {
         			cmd.getOptionValue("L"),
         			Integer.parseInt(cmd.getOptionValue("P")),
         			cmd.getOptionValue("D"));
+        	
+        	//if running in non interactive mode
+        	if (!cmd.hasOption("i")) {
+        		System.out.println("Connecting to IndexServer");
+        		peer.obtainIndexStub();
+        		System.out.println("Exporting FileServer interface");
+        		peer.exportFileServer();
+        		System.out.println("Starting DirWatcherThread");
+        		new DirWatcherThread(peer).start();
+        	}
+        	
         	//Create a new PeerConsole attached to the Peer object
             new PeerConsole(peer);
 
@@ -139,18 +150,24 @@ public class Peer implements FileServer {
                 .desc(  "print this help" )
                 .longOpt("help")
                 .build();	
+		Option interactive   = Option.builder("i")
+                .desc(  "Run in interactive mode. DirWatcherThread is not run and user must handle "
+                		+ "connection and registration manually")
+                .longOpt("interactive")
+                .build();
 		
 		options.addOption(indexAddress);
 		options.addOption(localAddress);
 		options.addOption(localPort);
 		options.addOption(directory);
 		options.addOption(help);
+		options.addOption(interactive);
 	}
 	
 	/**
 	 * Register all the files from the fileDirectoryName on the IndexServer.
 	 */
-	public void updateFileRigistry() {
+	public void updateFileRegistry() {
 		if (indexStub == null) {
 			System.out.println("Must obtain Index stub first");
 			return;
@@ -159,12 +176,13 @@ public class Peer implements FileServer {
 		File fileDir = new File(fileDirectoryName);
 		File[] files = fileDir.listFiles();
 
+		System.out.println("Updating remote file index");
 		for (int i = 0; i < files.length; i++) {
 			if (files[i].isFile() && !files[i].isHidden()) {
 				try {
-	            	System.out.println("Registering file: " + files[i].getName());
+	            	//System.out.println("Registering file: " + files[i].getName());
 	            	indexStub.register(new InetSocketAddress(localAddress, localPort), files[i].getName());
-					System.out.println("Registered test file successfully ");
+					//System.out.println("Registered test file successfully ");
 	            } catch (RemoteException e) {
 	            	System.out.println("Failed to contact server");
 	            	e.printStackTrace();

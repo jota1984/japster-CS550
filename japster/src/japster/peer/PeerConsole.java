@@ -85,7 +85,7 @@ public class PeerConsole extends Thread {
 					} 
 					break;
 				case "register": 
-					peer.updateFileRigistry();
+					peer.updateFileRegistry();
 					break;
 				case "download": 
 					if (location != null && fileName != null ) {

@@ -99,12 +99,12 @@ public class FileServerThread extends Thread {
 				output.write(buffer,0,len);
 				len = input.read(buffer);
 			}
-			System.out.println("File Transfer success");
+			System.out.println("File Transfer success (" + fileName + ")");
 		} catch (SocketTimeoutException e) {
-			System.out.println("File Transfer timed out waiting for client connection");				
+			System.out.println("File Transfer timed out waiting for client connection (" + fileName + ")");				
 
 		} catch (IOException e) {
-			System.out.println("File Transfer failed");
+			System.out.println("File Transfer failed(" + fileName + ")");
 			e.printStackTrace();
 
 		} finally {

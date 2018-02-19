@@ -89,6 +89,11 @@ public class Peer implements FileServer {
 	 * Register all the files from the fileDirectoryName on the IndexServer.
 	 */
 	public void updateFileRigistry() {
+		if (indexStub == null) {
+			System.out.println("Must obtain Index stub first");
+			return;
+		}
+		
 		File fileDir = new File(fileDirectoryName);
 		File[] files = fileDir.listFiles();
 

@@ -29,6 +29,10 @@ public class FileServerThread extends Thread {
 		
 		this.fileName = fileName;
 		
+		if (!new File(fileName).exists())
+			throw new FileNotFoundException();
+		
+		
 		serverSocket = new ServerSocket(0);
 		serverSocket.setSoTimeout(Const.FILE_SERVER_WAIT_TIME);
 

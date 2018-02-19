@@ -1,6 +1,7 @@
 package japster.peer;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.rmi.NotBoundException;
@@ -184,6 +185,8 @@ public class Peer implements FileServer {
 			serverThread = new FileServerThread(fileName);
 			port = serverThread.getPort();
 			serverThread.start();
+		} catch (FileNotFoundException e) {
+			System.out.println("File Not found");
 		} catch (IOException e) {
 			System.out.println("Could not create server thread");
 		}

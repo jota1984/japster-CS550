@@ -1,6 +1,5 @@
 package japster.index;
 
-import java.net.InetSocketAddress;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -84,9 +83,8 @@ public class IndexServer implements Index {
 	}
 
 	@Override
-	public void register(InetSocketAddress address, String name) throws RemoteException {
-		FileLocation location = new FileLocation(address);
-		fileIndex.register(name, location);
+	public void register(FileLocation location) throws RemoteException {
+		fileIndex.register(location);
 	}
 
 

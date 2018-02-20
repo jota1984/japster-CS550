@@ -175,13 +175,18 @@ public class Peer implements FileServer {
 		
 		File fileDir = new File(fileDirectoryName);
 		File[] files = fileDir.listFiles();
+		long fileSize; 
+		String fileName; 
 
 		System.out.println("Updating remote file index");
 		for (int i = 0; i < files.length; i++) {
 			if (files[i].isFile() && !files[i].isHidden()) {
 				try {
+					fileSize = files[i].length();
+					fileName = files[i].getName();
 	            	//System.out.println("Registering file: " + files[i].getName());
-	            	indexStub.register(new InetSocketAddress(localAddress, localPort), files[i].getName());
+					FileLocation location = new FileLocation(new InetSocketAddress(localAddress, localPort), fileName, fileSize);
+	            	indexStub.register(location);
 					//System.out.println("Registered test file successfully ");
 	            } catch (RemoteException e) {
 	            	System.out.println("Failed to contact server");

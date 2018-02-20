@@ -65,18 +65,18 @@ public class FileIndex {
 	
 	/**
 	 * Registers a new location on the index 
-	 * @param name
 	 * @param location
 	 */
-	public synchronized void register(String name, FileLocation location) {
-		FileLocator locator = fileTable.get(name);
+	public synchronized void register(FileLocation location) {
+		String fileName = location.getName();
+		FileLocator locator = fileTable.get(fileName);
 		//File not already in list
 		if(locator == null) {
-			locator = new FileLocator(name);
-			fileTable.put(name, locator);
+			locator = new FileLocator(fileName);
+			fileTable.put(fileName, locator);
 		}
 		locator.addLocation(location);
-		System.out.println("Added " + name + " to index");
+		System.out.println("Added " + fileName + " to index");
 	}
 	
 	public synchronized FileLocator search(String name) {

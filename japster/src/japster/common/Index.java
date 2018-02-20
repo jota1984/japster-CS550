@@ -1,6 +1,5 @@
 package japster.common;
 
-import java.net.InetSocketAddress;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
@@ -20,10 +19,8 @@ public interface Index extends Remote {
 	FileLocator search(String name) throws RemoteException;
 	/**
 	 * Registers a  new location for a file on the Index.
-	 * @param address InetSocketAddress containing the host address and port number
-	 * where the file can be requested
-	 * @param name String containing the name of the file that is being registered
+	 * @param location FileLocation that represents the information of a file on a Peer
 	 * @throws RemoteException
 	 */
-	void register(InetSocketAddress address, String name) throws RemoteException;
+	void register(FileLocation location) throws RemoteException;
 }

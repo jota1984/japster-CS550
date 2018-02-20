@@ -17,6 +17,7 @@ import japster.common.Const;
 public class FileDownloaderThread extends Thread {
 	
 	private String fileName;
+	private float fileSize; 
 	private String address; 
 	private int port; 
 	
@@ -30,8 +31,9 @@ public class FileDownloaderThread extends Thread {
 	 * @param address String representation of the peer that will provide the file
 	 * @param port int representing the port where the remote peer is serving the file
 	 */
-	public FileDownloaderThread(String fileName, String address, int port) { 
+	public FileDownloaderThread(String fileName, long fileSize, String address, int port) { 
 		this.fileName = fileName;
+		this.fileSize = fileSize; 
 		this.address = address; 
 		this.port = port; 
 	}
@@ -62,6 +64,21 @@ public class FileDownloaderThread extends Thread {
 			}
 		} 	
 	}
+	
+	private long progress;
+	
+	/**
+	 * Print download progress in 5% increments
+	 * @param downloaded
+	 */
+	public void printProgress(long downloaded) { 
+		long currentProgress = 5*Math.round( (downloaded * 100) / (fileSize*5) ) ;
+		if (currentProgress > progress ) {
+			progress = currentProgress;
+			String name = new File(fileName).getName();
+			System.out.println("Downloading " + name + ": " + progress + "% downloaded");
+		}
+	}
 
 	@Override
 	public void run() {
@@ -74,8 +91,14 @@ public class FileDownloaderThread extends Thread {
 			byte buffer[] = new byte[Const.BUFFER_SIZE];
 
 			int len = input.read(buffer);
+			long downloaded = 0; 
+			progress = -1;
+			printProgress(downloaded);
 			while(len>0) {
 				output.write(buffer,0,len);
+				downloaded += len;
+				printProgress(downloaded);
+				//System.out.println("" + downloaded + "bytes downloaded");
 				len = input.read(buffer);
 			}
 		

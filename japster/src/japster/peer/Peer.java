@@ -237,6 +237,7 @@ public class Peer implements FileServer {
 	public void download(String fileName, FileLocation location) throws NotBoundException, IOException {
 		String address = location.getLocationAddress().getHostString();
 		int port = location.getLocationAddress().getPort();
+		long size = location.getSize();
 		
 		//check if file already exists
 		String newfileName = fileDirectoryName + File.separator + fileName;
@@ -254,7 +255,7 @@ public class Peer implements FileServer {
 		
 		//Start a downloader thread to download the file 
 		FileDownloaderThread fileDownloader = 
-				new FileDownloaderThread(newfileName, address, downloadPort);
+				new FileDownloaderThread(newfileName, size, address, downloadPort);
 		fileDownloader.start();
 				
 	}

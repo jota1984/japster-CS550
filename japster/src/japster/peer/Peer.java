@@ -91,6 +91,9 @@ public class Peer implements FileServer {
             	System.exit(0);
         	}
         	
+        	//Required for RMI exportObject()
+        	System.setProperty("java.rmi.server.hostname",cmd.getOptionValue("L"));
+        	
         	//Create a new Peer object using command line arguments
         	Peer peer = new Peer(cmd.getOptionValue("I"),
         			cmd.getOptionValue("L"),

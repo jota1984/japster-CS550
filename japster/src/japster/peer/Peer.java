@@ -15,6 +15,7 @@ import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 
 import japster.common.Const;
 import japster.common.FileLocation;
@@ -78,45 +79,56 @@ public class Peer implements FileServer {
 	}
 	
 	public static void main(String[] args) {
-        try {
-        	//create and parse options
-        	createOptions();
-        	
-        	CommandLine cmd = (new DefaultParser()).parse( options, args);
-        	
-        	if (!cmd.hasOption("L") || !cmd.hasOption("D") || !cmd.hasOption("I") || 
-        			!cmd.hasOption("P") || cmd.hasOption("h")) {
-            	HelpFormatter formatter = new HelpFormatter();
-            	formatter.printHelp( "Peer", options );
-            	System.exit(0);
-        	}
-        	
-        	//Required for RMI exportObject()
-        	System.setProperty("java.rmi.server.hostname",cmd.getOptionValue("L"));
-        	
-        	//Create a new Peer object using command line arguments
-        	Peer peer = new Peer(cmd.getOptionValue("I"),
-        			cmd.getOptionValue("L"),
-        			Integer.parseInt(cmd.getOptionValue("P")),
-        			cmd.getOptionValue("D"));
-        	
-        	//if running in non interactive mode
-        	if (!cmd.hasOption("i")) {
-        		System.out.println("Connecting to IndexServer");
-        		peer.obtainIndexStub();
-        		System.out.println("Exporting FileServer interface");
-        		peer.exportFileServer();
-        		System.out.println("Starting DirWatcherThread");
-        		new DirWatcherThread(peer).start();
-        	}
-        	
-        	//Create a new PeerConsole attached to the Peer object
-            new PeerConsole(peer);
+		//create and parse options
+		createOptions();
 
-        } catch (Exception e) {
-            System.err.println("Client exception:");
-            e.printStackTrace();
-        }
+		CommandLine cmd;
+		try {
+			cmd = (new DefaultParser()).parse( options, args);
+			
+			if (!cmd.hasOption("L") || !cmd.hasOption("D") || !cmd.hasOption("I") || 
+					!cmd.hasOption("P") || cmd.hasOption("h")) {
+				HelpFormatter formatter = new HelpFormatter();
+				formatter.printHelp( "Peer", options );
+				System.exit(0);
+			}
+
+			//Required for RMI exportObject()
+			System.setProperty("java.rmi.server.hostname",cmd.getOptionValue("L"));
+
+			//Create a new Peer object using command line arguments
+			Peer peer = new Peer(cmd.getOptionValue("I"),
+					cmd.getOptionValue("L"),
+					Integer.parseInt(cmd.getOptionValue("P")),
+					cmd.getOptionValue("D"));
+
+			//if running in non interactive mode
+			if (!cmd.hasOption("i")) {
+				System.out.println("Connecting to IndexServer");
+				try {
+					peer.obtainIndexStub();
+				} catch (RemoteException|NotBoundException e) {
+					System.out.println("Error contacting server");
+					System.exit(0);
+				}
+				System.out.println("Exporting FileServer interface");
+				try {
+					peer.exportFileServer();
+				} catch (RemoteException e) {
+					System.out.println("Error exporting FileServer interface");
+					System.exit(0);
+				}
+				System.out.println("Starting DirWatcherThread");
+				new DirWatcherThread(peer).start();
+			}
+
+			//Create a new PeerConsole attached to the Peer object
+			new PeerConsole(peer);
+		} catch (ParseException e) {
+			System.out.println("Error parsing arguments");
+		} 
+
+
 	}
 	
 	/**
@@ -182,21 +194,20 @@ public class Peer implements FileServer {
 		String fileName; 
 
 //		System.out.println("Updating remote file index");
-		for (int i = 0; i < files.length; i++) {
-			if (files[i].isFile() && !files[i].isHidden()) {
-				try {
+		try {
+			for (int i = 0; i < files.length; i++) {
+				if (files[i].isFile() && !files[i].isHidden()) {
 					fileSize = files[i].length();
 					fileName = files[i].getName();
-	            	//System.out.println("Registering file: " + files[i].getName());
+					//System.out.println("Registering file: " + files[i].getName());
 					FileLocation location = new FileLocation(new InetSocketAddress(localAddress, localPort), fileName, fileSize);
-	            	indexStub.register(location);
+					indexStub.register(location);
 					//System.out.println("Registered test file successfully ");
-	            } catch (RemoteException e) {
-	            	System.out.println("Failed to contact server");
-	            	e.printStackTrace();
-				}
-			} 
-		}		
+				} 
+			}	
+        } catch (RemoteException e) {
+        	System.out.println("Failed to contact server");
+        }
 	}
 	
 	/**

@@ -178,7 +178,7 @@ public class Peer implements FileServer {
 		long fileSize; 
 		String fileName; 
 
-		System.out.println("Updating remote file index");
+//		System.out.println("Updating remote file index");
 		for (int i = 0; i < files.length; i++) {
 			if (files[i].isFile() && !files[i].isHidden()) {
 				try {

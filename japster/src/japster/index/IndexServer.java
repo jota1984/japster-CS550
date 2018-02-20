@@ -5,6 +5,12 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
+
 import japster.common.Const;
 import japster.common.FileLocation;
 import japster.common.FileLocator;
@@ -27,12 +33,26 @@ public class IndexServer implements Index {
 	 */
 	private FileIndex fileIndex; 
 	
+	private static Options options;
+	
 	public IndexServer() {
 		this.fileIndex = new FileIndex(); 
 	}
 	
 	public static void main(String[] args) {
 		try {
+        	//create and parse options
+        	createOptions();
+        	
+        	CommandLine cmd = (new DefaultParser()).parse( options, args);
+        	if (!cmd.hasOption("I") || cmd.hasOption("h")) {
+            	HelpFormatter formatter = new HelpFormatter();
+            	formatter.printHelp( "IndexServer", options );
+            	System.exit(0);
+        	}
+			
+        	System.setProperty("java.rmi.server.hostname",cmd.getOptionValue("I"));
+        	
 			IndexServer server = new IndexServer();
 			
 			//Initialize RMI
@@ -47,6 +67,27 @@ public class IndexServer implements Index {
             System.err.println("Cant start index server:");
             e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * Create command line options
+	 */
+	private static void createOptions() {
+		options = new Options();
+		
+		Option indexAddress   = Option.builder("I")
+				.argName( "ip_address" )
+                .hasArg()
+                .desc(  "use provided address to export RMI interface" )
+                .longOpt("index-address")
+                .build();
+		Option help   = Option.builder("h")
+                .desc(  "print this help" )
+                .longOpt("help")
+                .build();	
+		
+		options.addOption(indexAddress);
+		options.addOption(help);
 	}
 	
 	/**

@@ -54,7 +54,7 @@
     </target>
     <target name="IndexServer">
         <java classname="japster.index.IndexServer" failonerror="true" fork="yes">
-            <arg line=""/>
+            <arg line="-I 192.168.1.11"/>
             <classpath refid="run.IndexServer.classpath"/>
         </java>
     </target>

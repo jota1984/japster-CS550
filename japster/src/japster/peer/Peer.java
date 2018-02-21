@@ -181,8 +181,9 @@ public class Peer implements FileServer {
 	
 	/**
 	 * Register all the files from the fileDirectoryName on the IndexServer.
+	 * @throws RemoteException 
 	 */
-	public void updateFileRegistry() {
+	public void updateFileRegistry() throws RemoteException {
 		if (indexStub == null) {
 			System.out.println("Must obtain Index stub first");
 			return;
@@ -193,21 +194,15 @@ public class Peer implements FileServer {
 		long fileSize; 
 		String fileName; 
 
-//		System.out.println("Updating remote file index");
-		try {
-			for (int i = 0; i < files.length; i++) {
-				if (files[i].isFile() && !files[i].isHidden()) {
-					fileSize = files[i].length();
-					fileName = files[i].getName();
-					//System.out.println("Registering file: " + files[i].getName());
-					FileLocation location = new FileLocation(new InetSocketAddress(localAddress, localPort), fileName, fileSize);
-					indexStub.register(location);
-					//System.out.println("Registered test file successfully ");
-				} 
-			}	
-        } catch (RemoteException e) {
-        	System.out.println("Failed to contact server");
-        }
+		for (int i = 0; i < files.length; i++) {
+			if (files[i].isFile() && !files[i].isHidden()) {
+				fileSize = files[i].length();
+				fileName = files[i].getName();
+				FileLocation location = new FileLocation(new InetSocketAddress(localAddress, localPort), fileName, fileSize);
+				indexStub.register(location);
+			} 
+		}	
+
 	}
 	
 	/**
@@ -275,20 +270,21 @@ public class Peer implements FileServer {
 	}
 	
 	@Override
-	public int obtain(String name) throws RemoteException  {
+	public int obtain(String name) throws RemoteException, IOException  {
 		String fileName = fileDirectoryName + File.separator + name;
 		FileServerThread serverThread = null; 
 		int port = 0;
-		try {
+//		try {
 			//Create  a FileServerThread to serve the file
 			serverThread = new FileServerThread(fileName);
 			port = serverThread.getPort();
 			serverThread.start();
-		} catch (FileNotFoundException e) {
-			System.out.println("File Not found: " + fileName);
-		} catch (IOException e) {
-			System.out.println("Could not create server thread");
-		}
+//		} catch (IOException e) {
+//			System.out.println("File Not found: " + fileName);
+//			throw new 
+//		} //catch (IOException e) {
+//			System.out.println("Could not create server thread");
+//		}
 		return port;
 	}
 }

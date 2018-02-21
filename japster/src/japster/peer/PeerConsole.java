@@ -85,7 +85,11 @@ public class PeerConsole extends Thread {
 					} 
 					break;
 				case "register": 
-					peer.updateFileRegistry();
+					try { 
+						peer.updateFileRegistry();
+					} catch (RemoteException e) {
+						System.out.println("failed to contact server");
+					}
 					break;
 				case "download": 
 					if (location != null && fileName != null ) {
@@ -93,11 +97,9 @@ public class PeerConsole extends Thread {
 							System.out.println("Attempting to download " + fileName +
 									" from " + location);
 							peer.download(fileName,location);
-						} catch (NotBoundException|RemoteException e) {
-							System.out.println("Download failed");
-						} catch (IOException e) {
-							System.out.println("Download failed. File exists");
-						}
+						} catch (NotBoundException|IOException e) {
+							System.out.println("Download failed." + e.getMessage());
+						} 
 					} else {
 						System.out.println("Must search a file first");
 					}

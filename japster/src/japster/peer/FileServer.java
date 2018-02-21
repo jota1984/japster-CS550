@@ -1,5 +1,6 @@
 package japster.peer;
 
+import java.io.IOException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
@@ -15,5 +16,5 @@ public interface FileServer extends Remote {
 	 * @param name Name of file to serve
 	 * @return The port number where the file is being served
 	 */
-	public int obtain(String name) throws RemoteException;
+	public int obtain(String name) throws RemoteException, IOException;
 }

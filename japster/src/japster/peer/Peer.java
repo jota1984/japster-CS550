@@ -1,7 +1,6 @@
 package japster.peer;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.rmi.NotBoundException;
@@ -203,6 +202,32 @@ public class Peer implements FileServer {
 			} 
 		}	
 
+	}
+	
+	/**
+	 * Removes all files found on fileDirectoryName from the IndexServer
+	 * @throws RemoteException
+	 */
+	public void unregisterFiles() throws RemoteException {
+		if (indexStub == null) {
+			System.out.println("Must obtain Index stub first");
+			return;
+		}
+		
+		File fileDir = new File(fileDirectoryName);
+		File[] files = fileDir.listFiles();
+		
+		long fileSize; 
+		String fileName; 
+
+		for (int i = 0; i < files.length; i++) {
+			if (files[i].isFile() && !files[i].isHidden()) {
+				fileSize = files[i].length();
+				fileName = files[i].getName();
+				FileLocation location = new FileLocation(new InetSocketAddress(localAddress, localPort), fileName, fileSize);
+				indexStub.unregister(location);
+			} 
+		}	
 	}
 	
 	/**

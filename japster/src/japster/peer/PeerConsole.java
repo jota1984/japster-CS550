@@ -108,8 +108,13 @@ public class PeerConsole extends Thread {
 					peer.exportFileServer();
 					System.out.println("FileServer object exported");
 					break;
+				case "unregister": 
+					peer.unregisterFiles();
+					System.out.println("Removing files from IndexServer");
+					break; 
 				case "quit":
 			        System.out.println("quitting");
+			        peer.unregisterFiles();
 					System.exit(0);				
 				}
 				

@@ -23,4 +23,11 @@ public interface Index extends Remote {
 	 * @throws RemoteException
 	 */
 	void register(FileLocation location) throws RemoteException;
+	
+	/**
+	 * Removes a location from the index 
+	 * @param location
+	 * @throws RemoteException
+	 */
+	void unregister(FileLocation location) throws RemoteException; 
 }

@@ -128,5 +128,10 @@ public class IndexServer implements Index {
 		fileIndex.register(location);
 	}
 
+	@Override
+	public void unregister(FileLocation location) throws RemoteException {
+		fileIndex.unregister(location);
+	}
+
 
 }

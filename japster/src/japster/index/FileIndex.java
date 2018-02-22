@@ -78,6 +78,26 @@ public class FileIndex {
 		locator.addLocation(location);
 		System.out.println("Added " + fileName + " to index");
 	}
+
+	/**
+	 * Removes a location from the index 
+	 * @param location
+	 */
+	public synchronized void unregister(FileLocation location) {
+		String fileName = location.getName();
+		FileLocator locator = fileTable.get(fileName);
+		//File not in list
+		if(locator == null) {
+			return;
+		}
+		locator.removeLocation(location);
+		System.out.println("Removed " + location + " from index");
+		//Check if the file has any locations left
+		if (locator.getLocationCount() == 0 ) {
+			System.out.println(fileName + " is no longer on the network. Removed from Index");
+			fileTable.remove(fileName);
+		}
+	}
 	
 	public synchronized FileLocator search(String name) {
 		return fileTable.get(name);

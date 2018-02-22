@@ -3,6 +3,7 @@ package japster.peer;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.rmi.AccessException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -251,14 +252,25 @@ public class Peer implements FileServer {
 		return indexStub.search(name);
 	}
 	
+	
+	private Registry registry;
+	private FileServer serverStub;
+	
 	/**
 	 * Creates an RMI registry and binds the FileServer remote object to it.  
 	 * @throws RemoteException
 	 */
 	public void exportFileServer() throws RemoteException {
- 		FileServer stub = (FileServer) UnicastRemoteObject.exportObject(this,0);
-		Registry registry = LocateRegistry.createRegistry(localPort);
-        registry.rebind(Const.PEER_SERVICE_NAME, stub);
+ 		serverStub = (FileServer) UnicastRemoteObject.exportObject(this,0);
+ 		registry = LocateRegistry.getRegistry(localPort);
+		registry = LocateRegistry.createRegistry(localPort);
+        registry.rebind(Const.PEER_SERVICE_NAME, serverStub);
+	}
+	
+	public void shutdownFileServer() throws AccessException, RemoteException, NotBoundException {
+		registry.unbind(Const.PEER_SERVICE_NAME);
+		UnicastRemoteObject.unexportObject(this, false);
+		UnicastRemoteObject.unexportObject(registry, false);
 	}
 	
 	/**
@@ -268,7 +280,7 @@ public class Peer implements FileServer {
 	 * @throws NotBoundException
 	 * @throws IOException 
 	 */
-	public void download(String fileName, FileLocation location) throws NotBoundException, IOException {
+	public Thread download(String fileName, FileLocation location) throws NotBoundException, IOException {
 		String address = location.getLocationAddress().getHostString();
 		int port = location.getLocationAddress().getPort();
 		long size = location.getSize();
@@ -291,6 +303,8 @@ public class Peer implements FileServer {
 		FileDownloaderThread fileDownloader = 
 				new FileDownloaderThread(newfileName, size, address, downloadPort);
 		fileDownloader.start();
+		
+		return fileDownloader;
 				
 	}
 	

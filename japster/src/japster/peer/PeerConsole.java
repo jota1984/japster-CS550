@@ -96,7 +96,7 @@ public class PeerConsole extends Thread {
 						try {
 							System.out.println("Attempting to download " + fileName +
 									" from " + location);
-							peer.download(fileName,location);
+							peer.download(fileName,location,false);
 						} catch (NotBoundException|IOException e) {
 							System.out.println("Download failed." + e.getMessage());
 						} 

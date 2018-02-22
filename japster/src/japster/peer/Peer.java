@@ -277,10 +277,11 @@ public class Peer implements FileServer {
 	 * Download a file from another peer represented by a FileLocation
 	 * @param fileName String representing the name of the file
 	 * @param location FileLocation pointing to the registry of a Peer that has the file available
+	 * @param quiet DownloaderThread wont print progress if true
 	 * @throws NotBoundException
 	 * @throws IOException 
 	 */
-	public Thread download(String fileName, FileLocation location) throws NotBoundException, IOException {
+	public Thread download(String fileName, FileLocation location, boolean quiet) throws NotBoundException, IOException {
 		String address = location.getLocationAddress().getHostString();
 		int port = location.getLocationAddress().getPort();
 		long size = location.getSize();
@@ -301,7 +302,7 @@ public class Peer implements FileServer {
 		
 		//Start a downloader thread to download the file 
 		FileDownloaderThread fileDownloader = 
-				new FileDownloaderThread(newfileName, size, address, downloadPort);
+				new FileDownloaderThread(newfileName, size, address, downloadPort, quiet);
 		fileDownloader.start();
 		
 		return fileDownloader;

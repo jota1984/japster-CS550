@@ -20,10 +20,10 @@ public class DirWatcherThread extends Thread {
 	public DirWatcherThread(Peer peer) {
 		this.peer = peer;
 	}
-
+	
 	@Override
 	public void run() {
-		while(true) {
+		while(!Thread.interrupted()) {
 			try {
 				peer.updateFileRegistry();
 			} catch (RemoteException e) {
@@ -32,8 +32,9 @@ public class DirWatcherThread extends Thread {
 			try {
 				sleep(WATCH_PERIOD);
 			} catch (InterruptedException e) {
-				throw new RuntimeException(e);
+				return; 
 			} 
-		}		
+		}
+		return; 
 	}
 }

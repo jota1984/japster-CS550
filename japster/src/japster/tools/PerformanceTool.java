@@ -12,6 +12,7 @@ public class PerformanceTool {
 
 	public static void main(String[] args) {
 		runRegistrationTests();
+		runSearchtests();
 	}
 	
 	private static void runRegistrationTests() {
@@ -56,6 +57,56 @@ public class PerformanceTool {
 			rt = new RegistrationTest(1000,fileNumber);
 			rt.runTest();
 			rt.printResult();
+		} catch (RemoteException | NotBoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	private static void runSearchtests() {
+		try {
+			int fileNumber = 10;
+			int searches = 100; 
+			SearchTest st =new SearchTest(fileNumber, 1,searches );
+			st.runTest();
+			st.printResult();
+			st =new SearchTest(fileNumber, 10,searches );
+			st.runTest();
+			st.printResult();
+			st =new SearchTest(fileNumber, 100,searches );
+			st.runTest();
+			st.printResult();
+			st =new SearchTest(fileNumber, 1000,searches );
+			st.runTest();
+			st.printResult();
+			
+			fileNumber = 100; 
+			st =new SearchTest(fileNumber, 1,searches );
+			st.runTest();
+			st.printResult();
+			st =new SearchTest(fileNumber, 10,searches );
+			st.runTest();
+			st.printResult();
+			st =new SearchTest(fileNumber, 100,searches );
+			st.runTest();
+			st.printResult();
+			st =new SearchTest(fileNumber, 1000,searches );
+			st.runTest();
+			st.printResult();
+			
+			fileNumber = 1000; 
+			st =new SearchTest(fileNumber, 1,searches );
+			st.runTest();
+			st.printResult();
+			st =new SearchTest(fileNumber, 10,searches );
+			st.runTest();
+			st.printResult();
+			st =new SearchTest(fileNumber, 100,searches );
+			st.runTest();
+			st.printResult();
+			st =new SearchTest(fileNumber, 1000,searches );
+			st.runTest();
+			st.printResult();
 		} catch (RemoteException | NotBoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

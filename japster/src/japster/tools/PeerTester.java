@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.util.Random;
 
+import japster.peer.DirWatcherThread;
 import japster.peer.Peer;
 
 /**
@@ -29,6 +31,9 @@ public class PeerTester {
 	private String[] fileNames = null; 
 
 	private long registrationTime;
+	private long searchTime; 
+	
+	private DirWatcherThread watcher; 
 	
 	/**
 	 * Create a new PeerTester. A name must be provided which is used to create the 
@@ -127,6 +132,19 @@ public class PeerTester {
 			f.delete();
 	}
 	
+	/**
+	 * Create a DirWatcherThread for the Peer
+	 */
+	public void createWatcher() {
+		watcher = new DirWatcherThread(peer);
+		watcher.start(); 
+	}
+	
+	public void stopWatcher() {
+		if(watcher != null)
+			watcher.interrupt();
+	}
+	
 	
 	/**
 	 * Performs cleanup after finishing tests.
@@ -143,8 +161,6 @@ public class PeerTester {
 		deleteDir(); 
 	}
 	
-
-	
 	/**
 	 * Performs a registration operation and measures how long it takes. 
 	 * @throws RemoteException
@@ -156,8 +172,31 @@ public class PeerTester {
 		registrationTime = endTime - beginTime; 
 	}
 	
+	/**
+	 * Performs a number of sequential searches and measures how long it takes.
+	 * @param searchNumber
+	 * @param fileNames
+	 * @throws RemoteException
+	 */
+	public void testSearch(int searchNumber, String[] fileNames ) throws RemoteException {
+		Random rand = new Random(0);
+		long beginTime = System.currentTimeMillis();
+		for(int i = 0; i < searchNumber; i++) {
+			int idx = rand.nextInt(fileNames.length);
+			String name = fileNames[idx];
+			peer.search(name);
+		}
+		long endTime = System.currentTimeMillis();
+		searchTime = endTime - beginTime; 
+		
+	}
+	
 	public long getRegistrationTime() {
 		return registrationTime;
+	}
+	
+	public long getSearchTime() {
+		return searchTime;
 	}
 	
 	public String getName() {

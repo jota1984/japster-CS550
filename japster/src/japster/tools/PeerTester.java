@@ -3,10 +3,13 @@ package japster.tools;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.rmi.AccessException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.Random;
 
+import japster.common.FileLocation;
+import japster.common.FileLocator;
 import japster.peer.DirWatcherThread;
 import japster.peer.Peer;
 
@@ -32,6 +35,7 @@ public class PeerTester {
 
 	private long registrationTime;
 	private long searchTime; 
+	private long downloadsTime; 
 	
 	private DirWatcherThread watcher; 
 	
@@ -113,14 +117,18 @@ public class PeerTester {
 	 * Deletes the test files created by createFiles()
 	 */
 	private void deleteFiles() {
-		if (fileNames == null)
-			return;
-		for (int i = 0; i < numberOfFiles; i++) {
-			File f = new File(peerDir + File.separator + fileNames[i]);
-			if (f.exists() ) {
-				f.delete();
-			}
+		File dir = new File(peerDir);
+		for( File f : dir.listFiles()) {
+			f.delete();
 		}
+//		if (fileNames == null)
+//			return;
+//		for (int i = 0; i < numberOfFiles; i++) {
+//			File f = new File(peerDir + File.separator + fileNames[i]);
+//			if (f.exists() ) {
+//				f.delete();
+//			}
+//		}
 	}
 	
 	/**
@@ -188,7 +196,48 @@ public class PeerTester {
 		}
 		long endTime = System.currentTimeMillis();
 		searchTime = endTime - beginTime; 
+	}
+	
+
+	/**
+	 * Downloads all files from a list of FileLocations. 
+	 * @param fileNames
+	 * @param fileLocations
+	 * @throws IOException 
+	 * @throws NotBoundException 
+	 */
+	public void testDownloads(String [] fileNames, FileLocation[] fileLocations ) throws NotBoundException, IOException {
+		long beginTime = System.currentTimeMillis();
+		Thread[] threads = new Thread[fileNames.length]; 
+		for(int i = 0; i < fileNames.length; i++) {
+			FileLocation location = fileLocations[i];
+			String fileName = fileNames[i]; 
+			threads[i] = peer.download(fileName, location, true);
+		}
 		
+		//Wait for each download to finish 
+		for(Thread thread : threads ) {
+			try {
+				thread.join();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		long endTime = System.currentTimeMillis();
+		downloadsTime = endTime - beginTime; 
+	}
+	
+	public void exportFileServer() throws RemoteException {
+		peer.exportFileServer();
+	}
+	
+	public void shutdownFileServer() throws AccessException, RemoteException, NotBoundException {
+		peer.shutdownFileServer();
+	}
+	
+	public long getDownloadsTime() {
+		return downloadsTime;
 	}
 	
 	public long getRegistrationTime() {

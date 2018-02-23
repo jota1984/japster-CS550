@@ -76,7 +76,7 @@ public class FileIndex {
 			fileTable.put(fileName, locator);
 		}
 		locator.addLocation(location);
-		System.out.println("Added " + fileName + " to index");
+		System.out.println("Added " + fileName + "[" + location + "] to index");
 	}
 
 	/**
@@ -91,7 +91,7 @@ public class FileIndex {
 			return;
 		}
 		locator.removeLocation(location);
-		System.out.println("Removed " + location + " from index");
+		System.out.println("Removed " + fileName + "["+ location + "] from index");
 		//Check if the file has any locations left
 		if (locator.getLocationCount() == 0 ) {
 			System.out.println(fileName + " is no longer on the network. Removed from Index");
